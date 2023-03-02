@@ -33,13 +33,14 @@ public class Client implements BasicClient, ObserverObject {
 
     private Client(String name, String lastName, String address, String passport) {
         this.id = UUID.randomUUID();
-        accountObservable = new ArrayList<Account>();
+        accountObservable = new ArrayList<>();
         this.name = name;
         this.lastName = lastName;
         this.address = address;
         this.passport = passport;
-        clientHistory = new ArrayList<String>();
-        accounts = new ArrayList<Account>();
+        this.isVerified = getIsVerified();
+        clientHistory = new ArrayList<>();
+        accounts = new ArrayList<>();
     }
 
     @Override
@@ -152,5 +153,17 @@ public class Client implements BasicClient, ObserverObject {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", isVerified=" + isVerified +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", address='" + address + '\'' +
+                ", passport='" + passport + '\'' +
+                '}';
     }
 }
