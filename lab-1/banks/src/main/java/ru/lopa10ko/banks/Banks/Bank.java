@@ -24,6 +24,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Bank implements ObservableObject {
+    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.NONE)
+    private UUID id;
     private final List<BasicClient> clients;
     private final List<ObserverObject> observerClients;
     private final List<Account> accounts;
@@ -164,5 +166,13 @@ public class Bank implements ObservableObject {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Bank{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
