@@ -33,8 +33,6 @@ public class Bank implements ObservableObject {
     private String name;
     @Getter(AccessLevel.PUBLIC)
     private BankInfo bankInfo;
-    @Getter(AccessLevel.PUBLIC) @Setter(AccessLevel.NONE)
-    private UUID id;
 
     public Bank(String name, BankInfo bankInfo)
     {
