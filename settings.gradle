@@ -1,3 +1,5 @@
 rootProject.name = 'Lopa10ko'
-
-
+include 'lab-1:banks'
+findProject(':lab-1:banks')?.name = 'banks'
+include 'lab-1:banks-console'
+findProject(':lab-1:banks-console')?.name = 'banks-console'

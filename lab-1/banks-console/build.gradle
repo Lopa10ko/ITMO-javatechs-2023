@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+}
+
+group 'ru.lopa10ko.banks.console'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':lab-1:banks')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+    implementation 'org.beryx:text-io:3.4.1'
+    implementation 'org.beryx:text-io-web:3.4.1'
+    implementation 'org.slf4j:slf4j-api:2.0.5'
+    // runtimeOnly("org.jlib:jlib-awslambda-logback:1.0.0")
+}
+
+test {
+    useJUnitPlatform()
+}
