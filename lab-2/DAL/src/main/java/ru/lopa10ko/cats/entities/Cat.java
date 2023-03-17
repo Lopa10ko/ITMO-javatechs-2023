@@ -1,16 +1,6 @@
 package ru.lopa10ko.cats.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 import lombok.EqualsAndHashCode;
@@ -22,8 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -42,8 +31,10 @@ public class Cat {
     @JoinColumn(name = "catowner_uuid")
     @ToString.Exclude
     private CatOwner catOwner;
-    @ManyToMany(targetEntity = Cat.class)
-    @JoinTable(name = "cat_cat", joinColumns = {@JoinColumn(name = "cat_uuid")}, inverseJoinColumns = {@JoinColumn(name = "catfriends_uuid")})
+    @ManyToMany(targetEntity = Cat.class, fetch = FetchType.EAGER)
+    @JoinTable(name = "cat_cat",
+            joinColumns = {@JoinColumn(name = "cat_uuid", referencedColumnName = "uuid")},
+            inverseJoinColumns = {@JoinColumn(name = "catfriend_uuid", referencedColumnName = "uuid")})
     @ToString.Exclude
     private List<Cat> catFriends;
 
@@ -56,9 +47,19 @@ public class Cat {
     }
 
     public void addFriend(Cat cat) {
-        catFriends.add(cat);
-        cat.setCatFriends(Stream.concat(getCatFriends().stream(), Stream.of(this)).collect(Collectors.toList()));
+        if (cat != null && !catFriends.contains(cat)) {
+            catFriends.add(cat);
+            cat.addFriend(this);
+        }
     }
+
+    public void removeFriend(Cat cat) {
+        if (cat != null && catFriends.contains(cat)) {
+            catFriends.remove(cat);
+            cat.removeFriend(this);
+        }
+    }
+
     public List<Cat> getCatFriends() {
         return Collections.unmodifiableList(catFriends);
     }
