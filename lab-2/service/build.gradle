@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id "io.freefair.lombok" version "6.6.3"
+    id 'io.spring.dependency-management' version '1.1.0'
 }
 
 group 'ru.lopa10ko.cats'
@@ -8,6 +9,8 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
 }
 
 dependencies {
@@ -19,6 +22,7 @@ dependencies {
     implementation 'org.hibernate.common:hibernate-commons-annotations:6.0.6.Final'
     implementation 'org.postgresql:postgresql:42.5.4'
     implementation 'org.slf4j:slf4j-api:2.0.6'
+
     api project(':lab-2:DAL')
     api project(':lab-2:commons')
 }

@@ -2,6 +2,8 @@ package ru.lopa10ko.cats;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ru.lopa10ko.cats.commons.CatColor;
 import ru.lopa10ko.cats.dao.CatOwnerRepositoryImpl;
 import ru.lopa10ko.cats.dao.CatRepositoryImpl;
@@ -11,9 +13,12 @@ import ru.lopa10ko.cats.services.CatFacade;
 import ru.lopa10ko.cats.services.CatFacadeImpl;
 
 import java.time.LocalDate;
-
+@SpringBootApplication
 public class Main {
     public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
+    }
+    /*public static void main(String[] args) {
         EntityManager entityManager = Persistence.createEntityManagerFactory("cat").createEntityManager();
         CatFacade catFacade = new CatFacadeImpl(new CatRepositoryImpl(entityManager),
                 new CatOwnerRepositoryImpl(entityManager),
@@ -27,5 +32,5 @@ public class Main {
         catFacade.addFriend(cat1.getUuid(), cat2.getUuid());
         catFacade.addFriend(cat2.getUuid(), cat3.getUuid());
         catFacade.addPet(owner1.getUuid(), cat1.getUuid());
-    }
+    }*/
 }
