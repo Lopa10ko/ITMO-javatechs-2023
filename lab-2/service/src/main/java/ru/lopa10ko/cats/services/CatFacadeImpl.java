@@ -18,6 +18,8 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @RequiredArgsConstructor
+@Service
+@Transactional
 @ExtensionMethod({CatOwnerExtension.class, CatExtension.class})
 public class CatFacadeImpl implements CatFacade {
     private final CatRepository catRepository;
