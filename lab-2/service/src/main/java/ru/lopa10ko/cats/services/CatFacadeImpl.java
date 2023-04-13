@@ -2,6 +2,7 @@ package ru.lopa10ko.cats.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.ExtensionMethod;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.lopa10ko.cats.commons.CatColor;
@@ -11,10 +12,12 @@ import ru.lopa10ko.cats.dto.CatDto;
 import ru.lopa10ko.cats.dto.CatOwnerDto;
 import ru.lopa10ko.cats.entities.Cat;
 import ru.lopa10ko.cats.entities.CatOwner;
+import ru.lopa10ko.cats.entities.Cat_;
 import ru.lopa10ko.cats.extensions.CatExtension;
 import ru.lopa10ko.cats.extensions.CatOwnerExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -77,6 +80,18 @@ public class CatFacadeImpl implements CatFacade {
         Cat deleteCat = catRepository.findById(catUuid).orElseThrow(RuntimeException::new);
         deleteCat.getCatFriends().stream().toList().forEach(deleteCat::removeFriend);
         catRepository.delete(deleteCat);
+    }
+
+    @Override
+    public List<CatDto> getByParams(List<String> name, List<UUID> uuid, List<LocalDate> birthDay, List<CatColor> color, List<String> breed) {
+        return catRepository.findAll((Specification.where((Specification<Cat>) (root, query, criteriaBuilder) -> root.get(Cat_.uuid).in(uuid))
+                        .or(Specification.where((Specification<Cat>) (root, query, criteriaBuilder) -> root.get(Cat_.name).in(name)))
+                        .or(Specification.where((Specification<Cat>) (root, query, criteriaBuilder) -> root.get(Cat_.birthDay).in(birthDay)))
+                        .or(Specification.where((Specification<Cat>) (root, query, criteriaBuilder) -> root.get(Cat_.catColor).in(color)))
+                        .or(Specification.where((Specification<Cat>) (root, query, criteriaBuilder) -> root.get(Cat_.breed).in(breed)))))
+                .stream()
+                .map(cat -> cat.asDto())
+                .toList();
     }
 
     @Override

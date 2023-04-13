@@ -3,10 +3,13 @@ package ru.lopa10ko.cats.controllers;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.lopa10ko.cats.commons.CatColor;
 import ru.lopa10ko.cats.controllers.requests.CreateCatRequest;
 import ru.lopa10ko.cats.dto.CatDto;
 import ru.lopa10ko.cats.services.CatFacade;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -26,5 +29,18 @@ public class CatControllerImpl {
     @DeleteMapping("/{id}")
     public void deleteCat(@PathVariable("id") UUID catUuid) {
         catFacade.deleteCat(catUuid);
+    }
+
+    @GetMapping
+    public List<CatDto> getFilteredCats(@RequestParam(defaultValue = "") List<String> name,
+                                        @RequestParam(defaultValue = "") List<UUID> uuid,
+                                        @RequestParam(defaultValue = "") List<LocalDate> birthDay,
+                                        @RequestParam(defaultValue = "") List<CatColor> color,
+                                        @RequestParam(defaultValue = "") List<String> breed) {
+        return catFacade.getByParams(name, uuid, birthDay, color, breed);
+    }
+    @PatchMapping("/{id}/{friendId}")
+    public void addCatFriend(@PathVariable("id") UUID catUuid, @PathVariable("friendId") UUID catFriendUuid) {
+        catFacade.addFriend(catUuid, catFriendUuid);
     }
 }
