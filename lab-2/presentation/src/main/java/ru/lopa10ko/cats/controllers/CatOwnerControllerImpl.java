@@ -1,5 +1,6 @@
 package ru.lopa10ko.cats.controllers;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.lopa10ko.cats.controllers.requests.CreateCatOwnerRequest;
@@ -13,7 +14,7 @@ import java.util.UUID;
 public class CatOwnerControllerImpl {
     private final CatFacade catFacade;
     @PostMapping
-    public CatOwnerDto createCatOwner(@RequestBody CreateCatOwnerRequest createCatOwnerRequest) {
+    public CatOwnerDto createCatOwner(@Valid @RequestBody CreateCatOwnerRequest createCatOwnerRequest) {
         return catFacade.createCatOwner(createCatOwnerRequest.getName(), createCatOwnerRequest.getBirthDate());
     }
     @GetMapping("/{id}")
