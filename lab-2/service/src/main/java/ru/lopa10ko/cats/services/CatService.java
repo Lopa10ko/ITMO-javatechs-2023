@@ -17,7 +17,7 @@ public interface CatService {
      * @return CatDto
      * @see CatDto
      */
-    CatDto createCat(String name, LocalDate birthDay, String breed, CatColor catColor);
+    CatDto createCat(String name, UUID catOwnerUuid, LocalDate birthDay, String breed, CatColor catColor);
 
     /**
      * Double DAO reading method

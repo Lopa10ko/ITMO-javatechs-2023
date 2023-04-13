@@ -59,9 +59,10 @@ public class CatFacadeImpl implements CatFacade {
      * {@inheritDoc}
      */
     @Override
-    public CatDto createCat(String name, LocalDate birthDay, String breed, CatColor catColor) {
-        Cat cat = new Cat(name, birthDay, breed, catColor);
-        return catRepository.save(cat).asDto();
+    public CatDto createCat(String name, UUID catOwnerUuid, LocalDate birthDay, String breed, CatColor catColor) {
+        Cat cat = catRepository.save(new Cat(name, birthDay, breed, catColor));
+        addPet(catOwnerUuid, cat.getUuid());
+        return cat.asDto();
     }
 
     /**
