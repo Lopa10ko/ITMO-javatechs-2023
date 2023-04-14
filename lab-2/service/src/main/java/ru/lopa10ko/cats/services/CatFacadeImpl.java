@@ -6,6 +6,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.lopa10ko.cats.commons.CatColor;
+import ru.lopa10ko.cats.commons.exceptions.CatNotFoundException;
+import ru.lopa10ko.cats.commons.exceptions.CatOwnerNotFoundException;
 import ru.lopa10ko.cats.dao.CatOwnerRepository;
 import ru.lopa10ko.cats.dao.CatRepository;
 import ru.lopa10ko.cats.dto.CatDto;
@@ -42,7 +44,7 @@ public class CatFacadeImpl implements CatFacade {
      */
     @Override
     public CatOwnerDto readCatOwner(UUID catOwnerUuid) {
-        return catOwnerRepository.findById(catOwnerUuid).orElseThrow(RuntimeException::new).asDto();
+        return getCatOwnerbyUuid(catOwnerUuid).asDto();
     }
 
     /**
@@ -50,7 +52,7 @@ public class CatFacadeImpl implements CatFacade {
      */
     @Override
     public void deleteCatOwner(UUID catOwnerUuid) {
-        CatOwner catOwner = catOwnerRepository.findById(catOwnerUuid).orElseThrow(RuntimeException::new);
+        CatOwner catOwner = getCatOwnerbyUuid(catOwnerUuid);
         catOwner.getCats().stream().toList().stream().map(Cat::getUuid).forEach(this::deleteCat);
         catOwnerRepository.delete(catOwner);
     }
@@ -70,15 +72,16 @@ public class CatFacadeImpl implements CatFacade {
      */
     @Override
     public CatDto readCat(UUID catUuid) {
-        return catRepository.findById(catUuid).orElseThrow(RuntimeException::new).asDto();
+        return getCatbyUuid(catUuid).asDto();
     }
+
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void deleteCat(UUID catUuid) {
-        Cat deleteCat = catRepository.findById(catUuid).orElseThrow(RuntimeException::new);
+        Cat deleteCat = getCatbyUuid(catUuid);
         deleteCat.getCatFriends().stream().toList().forEach(deleteCat::removeFriend);
         catRepository.delete(deleteCat);
     }
@@ -97,8 +100,8 @@ public class CatFacadeImpl implements CatFacade {
 
     @Override
     public void addFriend(UUID leftCatUuid, UUID rightCatUuid) {
-        Cat leftCat = catRepository.findById(leftCatUuid).orElseThrow(RuntimeException::new);
-        Cat rightCat = catRepository.findById(rightCatUuid).orElseThrow(RuntimeException::new);
+        Cat leftCat = getCatbyUuid(leftCatUuid);
+        Cat rightCat = getCatbyUuid(rightCatUuid);
         leftCat.addFriend(rightCat);
         catRepository.save(leftCat);
         catRepository.save(rightCat);
@@ -106,9 +109,16 @@ public class CatFacadeImpl implements CatFacade {
 
     @Override
     public void addPet(UUID ownerUuid, UUID catUuid) {
-        CatOwner catOwner = catOwnerRepository.findById(ownerUuid).orElseThrow(RuntimeException::new);
-        Cat cat = catRepository.findById(catUuid).orElseThrow(RuntimeException::new);
+        CatOwner catOwner = getCatOwnerbyUuid(ownerUuid);
+        Cat cat = getCatbyUuid(catUuid);
         catOwner.addCat(cat);
         catRepository.save(cat);
+    }
+    private Cat getCatbyUuid(UUID catUuid) {
+        return catRepository.findById(catUuid).orElseThrow(() -> {throw CatNotFoundException.byUuid(catUuid);});
+    }
+
+    private CatOwner getCatOwnerbyUuid(UUID ownerUuid) {
+        return catOwnerRepository.findById(ownerUuid).orElseThrow(() -> {throw CatOwnerNotFoundException.byUuid(ownerUuid);});
     }
 }
