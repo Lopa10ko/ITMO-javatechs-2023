@@ -1,10 +1,10 @@
 package ru.lopa10ko.cats.controllers.requests;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
+import ru.lopa10ko.cats.controllers.validators.annotations.StringValueConstraint;
 
 import java.time.LocalDate;
 
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Data
 @Validated
 public class CreateCatOwnerRequest {
-    @NotBlank(message = "CatOwner name should not be blank")
+    @StringValueConstraint
     private String name;
     @NotNull(message = "CatOwner birthday should not be null")
     private LocalDate birthDate;
