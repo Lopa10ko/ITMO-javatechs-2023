@@ -2,8 +2,10 @@ package ru.lopa10ko.cats.controllers;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.lopa10ko.cats.commons.CatColor;
+import ru.lopa10ko.cats.commons.exceptions.CreationException;
 import ru.lopa10ko.cats.controllers.requests.CreateCatRequest;
 import ru.lopa10ko.cats.dto.CatDto;
 import ru.lopa10ko.cats.services.CatFacade;
@@ -18,7 +20,10 @@ import java.util.UUID;
 public class CatControllerImpl {
     private final CatFacade catFacade;
     @PostMapping
-    public CatDto createCat(@Valid @RequestBody CreateCatRequest createCatRequest) {
+    public CatDto createCat(@Valid @RequestBody CreateCatRequest createCatRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            throw CreationException.throwException();
+        }
         return catFacade.createCat(createCatRequest.getName(), createCatRequest.getCatOwnerUuid(), createCatRequest.getBirthDay(), createCatRequest.getBreed(), createCatRequest.getCatColor());
     }
 

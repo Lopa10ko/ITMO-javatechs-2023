@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.lopa10ko.cats.commons.exceptions.CreationException;
 import ru.lopa10ko.cats.controllers.requests.CreateCatOwnerRequest;
 import ru.lopa10ko.cats.dto.CatOwnerDto;
 import ru.lopa10ko.cats.services.CatFacade;
@@ -17,7 +18,7 @@ public class CatOwnerControllerImpl {
     @PostMapping
     public CatOwnerDto createCatOwner(@Valid @RequestBody CreateCatOwnerRequest createCatOwnerRequest, BindingResult result) {
         if (result.hasErrors()) {
-            throw new RuntimeException();
+            throw CreationException.throwException();
         }
         return catFacade.createCatOwner(createCatOwnerRequest.getName(), createCatOwnerRequest.getBirthDate());
     }
