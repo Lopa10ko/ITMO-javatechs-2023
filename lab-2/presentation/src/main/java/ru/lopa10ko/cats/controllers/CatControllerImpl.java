@@ -24,7 +24,7 @@ public class CatControllerImpl {
         if (result.hasErrors()) {
             throw CreationException.throwException();
         }
-        return catFacade.createCat(createCatRequest.getName(), createCatRequest.getCatOwnerUuid(), createCatRequest.getBirthDay(), createCatRequest.getBreed(), createCatRequest.getCatColor());
+        return catFacade.createCat(createCatRequest.getName(), createCatRequest.getCatOwnerUuid(), createCatRequest.getBirthDay(), createCatRequest.getBreed(), CatColor.valueOf(createCatRequest.getCatColor()));
     }
 
     @GetMapping("/{id}")
