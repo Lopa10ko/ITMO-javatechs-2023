@@ -1,5 +1,7 @@
 package ru.lopa10ko.cats.controllers;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.BindingResult;
@@ -11,8 +13,9 @@ import ru.lopa10ko.cats.services.CatFacade;
 import java.util.UUID;
 
 @AllArgsConstructor
-@RequestMapping("/cat-owners")
+@RequestMapping("/api/cat-owners")
 @RestController
+@SecurityScheme(name = "Bearer Authentication", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
 public class CatOwnerControllerImpl {
     private final CatFacade catFacade;
     @PostMapping

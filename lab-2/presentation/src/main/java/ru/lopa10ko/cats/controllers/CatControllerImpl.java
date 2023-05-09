@@ -2,6 +2,7 @@ package ru.lopa10ko.cats.controllers;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.lopa10ko.cats.commons.CatColor;
@@ -15,8 +16,9 @@ import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
-@RequestMapping("/cats")
+@RequestMapping("/api/cats")
 @RestController
+@PreAuthorize("hasAuthority('USER')")
 public class CatControllerImpl {
     private final CatFacade catFacade;
     @PostMapping
