@@ -6,7 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import ru.lopa10ko.cats.entities.User;
+import ru.lopa10ko.cats.security.model.UserDto;
 
 import java.security.Key;
 import java.util.Date;
@@ -28,19 +28,19 @@ public class JwtServiceImpl implements JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(User userDetails) {
-        return buildToken(userDetails, jwtExpiration);
+    public String generateToken(UserDto userDetails) {
+        return buildToken(userDetails);
     }
 
-    private String buildToken(User userDetails, long expiration) {
+    private String buildToken(UserDto userDetails) {
         return Jwts
                 .builder()
                 .setSubject(userDetails.getUsername())
                 .claim("roles", userDetails.getRoles())
-                .claim("ownerUuid", userDetails.getCatOwner().getUuid())
+                .claim("ownerUuid", userDetails.getCatOwnerUuid())
                 .claim("userUuid", userDetails.getUuid())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -66,7 +66,7 @@ public class JwtServiceImpl implements JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public Claims extractAllClaims(String token) {
+    private Claims extractAllClaims(String token) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())
@@ -76,7 +76,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
