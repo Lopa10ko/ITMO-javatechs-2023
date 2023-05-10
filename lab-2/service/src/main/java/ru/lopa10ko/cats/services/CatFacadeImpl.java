@@ -3,6 +3,8 @@ package ru.lopa10ko.cats.services;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.ExtensionMethod;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.lopa10ko.cats.commons.CatColor;
@@ -17,9 +19,11 @@ import ru.lopa10ko.cats.entities.CatOwner;
 import ru.lopa10ko.cats.entities.Cat_;
 import ru.lopa10ko.cats.extensions.CatExtension;
 import ru.lopa10ko.cats.extensions.CatOwnerExtension;
+import ru.lopa10ko.cats.security.model.CatsAuthentication;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -55,6 +59,19 @@ public class CatFacadeImpl implements CatFacade {
         CatOwner catOwner = getCatOwnerbyUuid(catOwnerUuid);
         catOwner.getCats().stream().toList().stream().map(Cat::getUuid).forEach(this::deleteCat);
         catOwnerRepository.delete(catOwner);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public CatOwnerDto getCurrentOwner() {
+        //TODO: move to security module (getUuid)
+        return Optional.ofNullable(SecurityContextHolder.getContext())
+                .map(SecurityContext::getAuthentication)
+                .map(CatsAuthentication.class::cast)
+                .map(CatsAuthentication::getUuid)
+                .flatMap(catOwnerRepository::findById)
+                .map(CatOwnerExtension::asDto)
+                .orElseThrow(RuntimeException::new);
     }
 
     /**
