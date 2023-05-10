@@ -1,5 +1,6 @@
 package ru.lopa10ko.cats.controllers;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @RequestMapping("/api/cats")
 @RestController
 @PreAuthorize("hasAuthority('USER')")
+@SecurityRequirement(name = "Bearer Authentication")
 public class CatControllerImpl {
     private final CatFacade catFacade;
     @PostMapping
@@ -32,10 +34,6 @@ public class CatControllerImpl {
     @GetMapping("/{id}")
     public CatDto readCat(@PathVariable("id") UUID catUuid) {
         return catFacade.readCat(catUuid);
-    }
-    @DeleteMapping("/{id}")
-    public void deleteCat(@PathVariable("id") UUID catUuid) {
-        catFacade.deleteCat(catUuid);
     }
 
     @GetMapping
