@@ -1,6 +1,7 @@
 package ru.lopa10ko.cats.security.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
 public class CatsAuthentication implements Authentication {
     private String userName;
     private Set<Roles> roles;
+    @Getter
     private UUID uuid;
     private boolean authenticated;
     @Override

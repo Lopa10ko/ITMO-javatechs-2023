@@ -2,10 +2,11 @@ package ru.lopa10ko.cats.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.lopa10ko.cats.commons.Role;
+import ru.lopa10ko.cats.security.model.Roles;
 
 import java.util.Set;
 import java.util.UUID;
+
 @Entity
 @Data
 @Builder
@@ -25,5 +26,5 @@ public class User {
     private CatOwner catOwner;
     @ElementCollection
     @Enumerated(value = EnumType.STRING)
-    private Set<Role> roles;
+    private Set<Roles> roles;
 }
