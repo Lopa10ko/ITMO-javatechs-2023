@@ -1,4 +1,4 @@
-package ru.lopa10ko.cats.security.requests;
+package ru.lopa10ko.cats.controllers.requests;
 
 import lombok.Data;
 
