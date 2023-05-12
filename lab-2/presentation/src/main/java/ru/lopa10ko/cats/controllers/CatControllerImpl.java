@@ -28,12 +28,12 @@ public class CatControllerImpl {
         if (result.hasErrors()) {
             throw CreationException.throwException();
         }
-        return catFacade.createCat(createCatRequest.getName(), createCatRequest.getCatOwnerUuid(), createCatRequest.getBirthDay(), createCatRequest.getBreed(), CatColor.valueOf(createCatRequest.getCatColor()));
+        return catFacade.createCatCheckUser(createCatRequest.getName(), createCatRequest.getCatOwnerUuid(), createCatRequest.getBirthDay(), createCatRequest.getBreed(), CatColor.valueOf(createCatRequest.getCatColor()));
     }
 
     @GetMapping("/{id}")
     public CatDto readCat(@PathVariable("id") UUID catUuid) {
-        return catFacade.readCat(catUuid);
+        return catFacade.readCatCheckUser(catUuid);
     }
 
     @GetMapping
@@ -42,10 +42,10 @@ public class CatControllerImpl {
                                         @RequestParam(defaultValue = "") List<LocalDate> birthDay,
                                         @RequestParam(defaultValue = "") List<CatColor> color,
                                         @RequestParam(defaultValue = "") List<String> breed) {
-        return catFacade.getByParams(name, uuid, birthDay, color, breed);
+        return catFacade.getByParamsCheckUser(name, uuid, birthDay, color, breed);
     }
     @PatchMapping("/{id}/{friendId}")
     public void addCatFriend(@PathVariable("id") UUID catUuid, @PathVariable("friendId") UUID catFriendUuid) {
-        catFacade.addFriend(catUuid, catFriendUuid);
+        catFacade.addFriendCheckUser(catUuid, catFriendUuid);
     }
 }

@@ -48,7 +48,7 @@ public class CatFacadeImpl implements CatFacade {
      */
     @Override
     public CatOwnerDto readCatOwner(UUID catOwnerUuid) {
-        return getCatOwnerbyUuid(catOwnerUuid).asDto();
+        return getCatOwnerByUuid(catOwnerUuid).asDto();
     }
 
     /**
@@ -56,7 +56,7 @@ public class CatFacadeImpl implements CatFacade {
      */
     @Override
     public void deleteCatOwner(UUID catOwnerUuid) {
-        CatOwner catOwner = getCatOwnerbyUuid(catOwnerUuid);
+        CatOwner catOwner = getCatOwnerByUuid(catOwnerUuid);
         catOwner.getCats().stream().toList().stream().map(Cat::getUuid).forEach(this::deleteCat);
         catOwnerRepository.delete(catOwner);
     }
@@ -89,7 +89,7 @@ public class CatFacadeImpl implements CatFacade {
      */
     @Override
     public CatDto readCat(UUID catUuid) {
-        return getCatbyUuid(catUuid).asDto();
+        return getCatByUuid(catUuid).asDto();
     }
 
 
@@ -98,7 +98,7 @@ public class CatFacadeImpl implements CatFacade {
      */
     @Override
     public void deleteCat(UUID catUuid) {
-        Cat deleteCat = getCatbyUuid(catUuid);
+        Cat deleteCat = getCatByUuid(catUuid);
         deleteCat.getCatFriends().stream().toList().forEach(deleteCat::removeFriend);
         catRepository.delete(deleteCat);
     }
@@ -117,25 +117,79 @@ public class CatFacadeImpl implements CatFacade {
 
     @Override
     public void addFriend(UUID leftCatUuid, UUID rightCatUuid) {
-        Cat leftCat = getCatbyUuid(leftCatUuid);
-        Cat rightCat = getCatbyUuid(rightCatUuid);
+        Cat leftCat = getCatByUuid(leftCatUuid);
+        Cat rightCat = getCatByUuid(rightCatUuid);
         leftCat.addFriend(rightCat);
         catRepository.save(leftCat);
         catRepository.save(rightCat);
     }
 
     @Override
+    public void addFriendCheckUser(UUID leftCatUuid, UUID rightCatUuid) {
+        if (getCurrentOwner().getCats()
+                .stream()
+                .map(CatDto::getUuid)
+                .toList()
+                .contains(leftCatUuid)) {
+            throw CatNotFoundException.byUuid(leftCatUuid);
+        }
+        addFriend(leftCatUuid, rightCatUuid);
+    }
+
+    @Override
     public void addPet(UUID ownerUuid, UUID catUuid) {
-        CatOwner catOwner = getCatOwnerbyUuid(ownerUuid);
-        Cat cat = getCatbyUuid(catUuid);
+        CatOwner catOwner = getCatOwnerByUuid(ownerUuid);
+        Cat cat = getCatByUuid(catUuid);
         catOwner.addCat(cat);
         catRepository.save(cat);
     }
-    private Cat getCatbyUuid(UUID catUuid) {
+
+
+    @Override
+    public CatDto createCatCheckUser(String name, UUID catOwnerUuid, LocalDate birthDay, String breed, CatColor catColor) {
+        if (!getCurrentOwner().getUuid().equals(catOwnerUuid)) {
+            throw CatOwnerNotFoundException.byUuid(catOwnerUuid);
+        }
+        return createCat(name, catOwnerUuid, birthDay, breed, catColor);
+    }
+
+    @Override
+    public CatDto readCatCheckUser(UUID catUuid) {
+        if (getCurrentOwner().getCats()
+                .stream()
+                .map(CatDto::getUuid)
+                .toList()
+                .contains(catUuid)) {
+            throw CatNotFoundException.byUuid(catUuid);
+        }
+        return readCat(catUuid);
+    }
+
+    @Override
+    public void deleteCatCheckUser(UUID catUuid) {
+        if (getCurrentOwner().getCats()
+                .stream()
+                .map(CatDto::getUuid)
+                .toList()
+                .contains(catUuid)) {
+            throw CatNotFoundException.byUuid(catUuid);
+        }
+        deleteCat(catUuid);
+    }
+
+    @Override
+    public List<CatDto> getByParamsCheckUser(List<String> name, List<UUID> uuid, List<LocalDate> birthDay, List<CatColor> color, List<String> breed) {
+        return getByParams(name, uuid, birthDay, color, breed)
+                .stream()
+                .filter(catDto -> catDto.getCatOwnerUuid().equals(getCurrentOwner().getUuid()))
+                .toList();
+    }
+
+    private Cat getCatByUuid(UUID catUuid) {
         return catRepository.findById(catUuid).orElseThrow(() -> {throw CatNotFoundException.byUuid(catUuid);});
     }
 
-    private CatOwner getCatOwnerbyUuid(UUID ownerUuid) {
+    private CatOwner getCatOwnerByUuid(UUID ownerUuid) {
         return catOwnerRepository.findById(ownerUuid).orElseThrow(() -> {throw CatOwnerNotFoundException.byUuid(ownerUuid);});
     }
 }
