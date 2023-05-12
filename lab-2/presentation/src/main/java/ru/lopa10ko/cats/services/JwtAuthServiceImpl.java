@@ -10,6 +10,7 @@ import ru.lopa10ko.cats.dao.CatOwnerRepository;
 import ru.lopa10ko.cats.dao.UserRepository;
 import ru.lopa10ko.cats.entities.CatOwner;
 import ru.lopa10ko.cats.entities.User;
+import ru.lopa10ko.cats.security.model.Roles;
 import ru.lopa10ko.cats.security.model.UserDto;
 import ru.lopa10ko.cats.security.services.JwtService;
 
@@ -42,7 +43,7 @@ public class JwtAuthServiceImpl implements JwtAuthService {
         catOwnerRepository.save(catOwner);
         var user = User.builder()
                 .username(jwtCreateCatOwnerRequest.getLogin())
-                .roles(Set.of(jwtCreateCatOwnerRequest.getDefaultRole()))
+                .roles(Set.of(Roles.USER))
                 .password(passwordEncoder.encode(jwtCreateCatOwnerRequest.getPassword()))
                 .catOwner(catOwner)
                 .build();
