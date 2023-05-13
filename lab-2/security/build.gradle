@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
-    id 'org.springframework.boot' version '3.0.6'
+    id 'org.springframework.boot' version '3.0.3'
+    id "io.freefair.lombok" version "6.6.3"
     id 'io.spring.dependency-management' version '1.1.0'
 }
 
@@ -14,7 +15,7 @@ repositories {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    implementation 'org.springframework.boot:spring-boot-starter-security:3.0.6'
+    implementation 'org.springframework.boot:spring-boot-starter-security:3.0.3'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -26,6 +27,14 @@ dependencies {
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
     implementation 'org.springframework.security:spring-security-core:6.0.3'
     compileOnlyApi 'org.springframework.security:spring-security-core:6.0.3'
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
 }
 
 test {
