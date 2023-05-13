@@ -17,23 +17,27 @@ import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
-@RequestMapping("/api/cats")
+@RequestMapping("/api/admin/cats")
 @RestController
-@PreAuthorize("hasAuthority('USER')")
+@PreAuthorize("hasAuthority('ADMIN')")
 @SecurityRequirement(name = "Bearer Authentication")
-public class CatControllerImpl {
+public class AdminCatControllerImpl {
     private final CatFacade catFacade;
     @PostMapping
     public CatDto createCat(@Valid @RequestBody CreateCatRequest createCatRequest, BindingResult result) {
         if (result.hasErrors()) {
             throw CreationException.throwException();
         }
-        return catFacade.createCatCheckUser(createCatRequest.getName(), catFacade.getCurrentOwner().getUuid(), createCatRequest.getBirthDay(), createCatRequest.getBreed(), CatColor.valueOf(createCatRequest.getCatColor()));
+        return catFacade.createCat(createCatRequest.getName(), createCatRequest.getCatOwnerUuid(), createCatRequest.getBirthDay(), createCatRequest.getBreed(), CatColor.valueOf(createCatRequest.getCatColor()));
     }
 
     @GetMapping("/{id}")
     public CatDto readCat(@PathVariable("id") UUID catUuid) {
-        return catFacade.readCatCheckUser(catUuid);
+        return catFacade.readCat(catUuid);
+    }
+    @DeleteMapping("/{id}")
+    public void deleteCat(@PathVariable("id") UUID catUuid) {
+        catFacade.deleteCat(catUuid);
     }
 
     @GetMapping
@@ -42,10 +46,10 @@ public class CatControllerImpl {
                                         @RequestParam(defaultValue = "") List<LocalDate> birthDay,
                                         @RequestParam(defaultValue = "") List<CatColor> color,
                                         @RequestParam(defaultValue = "") List<String> breed) {
-        return catFacade.getByParamsCheckUser(name, uuid, birthDay, color, breed);
+        return catFacade.getByParams(name, uuid, birthDay, color, breed);
     }
     @PatchMapping("/{id}/{friendId}")
     public void addCatFriend(@PathVariable("id") UUID catUuid, @PathVariable("friendId") UUID catFriendUuid) {
-        catFacade.addFriendCheckUser(catUuid, catFriendUuid);
+        catFacade.addFriend(catUuid, catFriendUuid);
     }
 }

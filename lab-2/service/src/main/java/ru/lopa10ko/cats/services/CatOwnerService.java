@@ -29,4 +29,6 @@ public interface CatOwnerService {
      * @see CatOwnerDto
      */
     void deleteCatOwner(UUID catOwnerUuid);
+
+    CatOwnerDto getCurrentOwner();
 }

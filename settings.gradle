@@ -11,4 +11,6 @@ include 'lab-2:presentation'
 findProject(':lab-2:presentation')?.name = 'presentation'
 include 'lab-2:commons'
 findProject(':lab-2:commons')?.name = 'commons'
+include 'lab-2:security'
+findProject(':lab-2:security')?.name = 'security'
 

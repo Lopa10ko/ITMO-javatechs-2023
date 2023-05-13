@@ -25,6 +25,7 @@ dependencies {
 
     api project(':lab-2:DAL')
     api project(':lab-2:commons')
+    api project(':lab-2:security')
 }
 
 test {
