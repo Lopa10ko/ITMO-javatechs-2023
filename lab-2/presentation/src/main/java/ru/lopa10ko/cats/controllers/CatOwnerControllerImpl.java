@@ -1,53 +1,33 @@
 package ru.lopa10ko.cats.controllers;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import ru.lopa10ko.cats.commons.exceptions.CreationException;
+import ru.lopa10ko.cats.controllers.requests.CreateCatOwnerRequest;
 import ru.lopa10ko.cats.dto.CatOwnerDto;
 import ru.lopa10ko.cats.services.CatFacade;
-import ru.lopa10ko.cats.services.CatOwnerService;
-
-import java.time.LocalDate;
 import java.util.UUID;
 
 @AllArgsConstructor
-public class CatOwnerControllerImpl implements CatOwnerController {
+@RequestMapping("/cat-owners")
+@RestController
+public class CatOwnerControllerImpl {
     private final CatFacade catFacade;
-
-    /**
-     * Double DAO creation method
-     *
-     * @param name      string
-     * @param birthDate LocalDate
-     * @return CatOwnerDto
-     * @see CatOwnerDto
-     * @see CatOwnerService
-     */
-    @Override
-    public CatOwnerDto createCatOwner(String name, LocalDate birthDate) {
-        return catFacade.createCatOwner(name, birthDate);
+    @PostMapping
+    public CatOwnerDto createCatOwner(@Valid @RequestBody CreateCatOwnerRequest createCatOwnerRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            throw CreationException.throwException();
+        }
+        return catFacade.createCatOwner(createCatOwnerRequest.getName(), createCatOwnerRequest.getBirthDate());
     }
-
-    /**
-     * Double Service reading method
-     *
-     * @param catOwnerUuid UUID to read
-     * @return CatOwnerDto
-     * @see CatOwnerDto
-     * @see CatOwnerService
-     */
-    @Override
-    public CatOwnerDto readCatOwner(UUID catOwnerUuid) {
+    @GetMapping("/{id}")
+    public CatOwnerDto readCatOwner(@PathVariable("id") UUID catOwnerUuid) {
         return catFacade.readCatOwner(catOwnerUuid);
     }
-
-    /**
-     * Double Service deletion method
-     *
-     * @param catOwnerUuid id to delete
-     * @see CatOwnerDto
-     * @see CatOwnerService
-     */
-    @Override
-    public void deleteCatOwner(UUID catOwnerUuid) {
+    @DeleteMapping("/{id}")
+    public void deleteCatOwner(@PathVariable("id")UUID catOwnerUuid) {
         catFacade.deleteCatOwner(catOwnerUuid);
     }
 }

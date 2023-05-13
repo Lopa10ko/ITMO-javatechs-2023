@@ -1,39 +1,16 @@
 package ru.lopa10ko.cats.dao;
 
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 import ru.lopa10ko.cats.entities.Cat;
-
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
-public interface CatRepository {
-    /**
-     * Create new cat entry
-     * @param cat entity to persist
-     * @return Cat
-     * @see Cat
-     */
-    Optional<Cat> create(Cat cat);
+@Repository
+public interface CatRepository extends CrudRepository<Cat, UUID>, JpaSpecificationExecutor<Cat> {
+    Cat findByUuidAndCatOwnerUuid(UUID uuid, UUID catOwnerUuid);
 
-    /**
-     * Read cat entry by UUID(string)
-     * @param uuid UUID identification by id
-     * @return Cat
-     * @see Cat
-     */
-    Optional<Cat> read(UUID uuid);
-
-    /**
-     * Update cat entry
-     * @param cat Cat entity to merge
-     * @return Cat
-     * @see Cat
-     */
-    Optional<Cat> update(Cat cat);
-
-    /**
-     * Remove cat entry
-     * @param cat entity to delete
-     * @see Cat
-     */
-    void delete(Cat cat);
+    List<Cat> findFriendsByUuidIn(List<UUID> uuids);
+    boolean existsByName(String name);
 }

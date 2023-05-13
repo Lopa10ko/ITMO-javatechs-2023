@@ -1,6 +1,8 @@
 plugins {
     id 'java-library'
     id "io.freefair.lombok" version "6.6.3"
+    id 'org.springframework.boot' version '3.0.3'
+    id 'io.spring.dependency-management' version '1.1.0'
 }
 
 group 'ru.lopa10ko.cats'
@@ -8,9 +10,12 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     testImplementation 'org.mockito:mockito-core:5.2.0'
@@ -20,6 +25,13 @@ dependencies {
     implementation 'org.hibernate.common:hibernate-commons-annotations:6.0.6.Final'
     implementation 'org.postgresql:postgresql:42.5.4'
     implementation 'org.slf4j:slf4j-api:2.0.6'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.5'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.0.5'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.5'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     api project(':lab-2:service')
     api project(':lab-2:commons')
 }

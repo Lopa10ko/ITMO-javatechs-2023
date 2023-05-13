@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/cats
+    username: cats
+    password: cats
+  jpa:
+    hibernate:
+      ddl-auto: update
+springdoc:
+  swagger-ui:
+    path: swagger-test.html
+    enabled: true

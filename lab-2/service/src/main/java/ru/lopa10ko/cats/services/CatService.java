@@ -4,6 +4,7 @@ import ru.lopa10ko.cats.commons.CatColor;
 import ru.lopa10ko.cats.dto.CatDto;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 public interface CatService {
@@ -16,7 +17,7 @@ public interface CatService {
      * @return CatDto
      * @see CatDto
      */
-    CatDto createCat(String name, LocalDate birthDay, String breed, CatColor catColor);
+    CatDto createCat(String name, UUID catOwnerUuid, LocalDate birthDay, String breed, CatColor catColor);
 
     /**
      * Double DAO reading method
@@ -32,4 +33,6 @@ public interface CatService {
      * @see CatDto
      */
     void deleteCat(UUID catUuid);
+
+    List<CatDto> getByParams(List<String> name, List<UUID> uuid, List<LocalDate> birthDay, List<CatColor> color, List<String> breed);
 }
