@@ -1,0 +1,36 @@
+plugins {
+    id 'java-library'
+    id "io.freefair.lombok" version "6.6.3"
+    id 'org.springframework.boot' version '3.0.3'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group 'ru.lopa10ko'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:3.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.1.0'
+
+    api project(":lab-2:shared-libs:commons")
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}

@@ -1,0 +1,63 @@
+version: "3.9"
+
+networks:
+  dockerapi-dev:
+    driver: bridge
+
+volumes:
+  db_api:
+    driver: local
+  db_cats:
+    driver: local
+  db_owners:
+    driver: local
+
+services:
+  api:
+    image: postgres:13.3
+    restart: always
+    volumes:
+      - db_api:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: "api"
+      POSTGRES_USER: "api"
+      POSTGRES_PASSWORD: "api"
+    ports:
+      - "15432:5432"
+    networks:
+      - dockerapi-dev
+
+  cats:
+    image: postgres:13.3
+    restart: always
+    volumes:
+      - db_cats:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: "cats"
+      POSTGRES_USER: "cats"
+      POSTGRES_PASSWORD: "cats"
+    ports:
+      - "15433:5432"
+    networks:
+      - dockerapi-dev
+
+  owners:
+    image: postgres:13.3
+    restart: always
+    volumes:
+      - db_owners:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: "owners"
+      POSTGRES_USER: "owners"
+      POSTGRES_PASSWORD: "owners"
+    ports:
+      - "15434:5432"
+    networks:
+      - dockerapi-dev
+
+  rabbitmq:
+    restart: always
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
